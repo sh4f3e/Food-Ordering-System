@@ -70,7 +70,7 @@ const Body = () => {
       </div>
       <div className="Rated">
         <button
-          className="rated-btn py-2 px-5 bg-orange-500 border-2 rounded-full m-2 ml-8 mt-5 text-white text-[20px] hover:bg-white hover:text-black hover:border-orange-500"
+          className="rated-btn py-2 px-5 bg-orange-500 border-2 rounded-full m-2 ml-8 mt-5 text-white md:text-[20px] hover:bg-white hover:text-black hover:border-orange-500"
           onClick={() => {
             const filteredList = restaurantlist.filter(
               (res) => res.info.avgRating > "4.2"
@@ -81,21 +81,12 @@ const Body = () => {
           Top Rated
         </button>
       </div>
-      <div>
-        <input
-          className="focus:outline-none  border border-black mb-4"
-          value={loggedInUser}
-          onChange={(e) => {
-            setUserInfo(e.target.value);
-          }}
-        ></input>
-      </div>
 
-      <div className="online-status flex flex-row-reverse text-[15px] italic text-[#7f7f7f] pr-[50px] mt-[-40px]">
+      <div className="online-status flex flex-row-reverse text-[15px] italic text-[#7f7f7f] pr-[50px] md:mt-[-40px] -mt-10">
         <p>Status: {onlinestatus ? "Online" : "Offline"}</p>
       </div>
 
-      <div className="res-container flex flex-wrap pl-[90px]">
+      <div className="res-container flex flex-wrap md:pl-[90px] pl-10">
         {restaurantlist.map((restaurant) => (
           <Link
             key={restaurant.info.id}

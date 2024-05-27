@@ -5,6 +5,8 @@ const restaurantListSlice = createSlice({
   initialState: {
     list: null,
     searchText: null,
+    collapse: false,
+    collapseIndex: null,
   },
   reducers: {
     addRestaurantList: (state, action) => {
