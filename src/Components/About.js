@@ -7,14 +7,10 @@ import UserContext from "../utils/UserContext";
 class About extends React.Component {
   constructor(props) {
     super(props);
-    // console.log("Parent Constructor");
   }
 
-  componentDidMount() {
-    // console.log("Parent ComponentDidMount");
-  }
+  componentDidMount() {}
   render() {
-    // console.log("Parent Render")
     return (
       <div>
         <h1>About Us</h1>

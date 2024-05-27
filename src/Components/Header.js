@@ -1,18 +1,32 @@
 import { LOGO_URL, SEARCH_URL } from "../Utils/Constants";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { Link } from "react-router-dom";
 import UserContext from "../utils/UserContext";
-import { useSelector } from "react-redux";
-let search;
-const Header = () => {
-  const [buttonClick, setButtonClick] = useState(["Login"]);
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addRestaurantList,
+  searchRestaurantList,
+} from "../utils/restaurantListSlice";
 
-  const [searchInput, setSearchInput] = useState([]);
+const Header = () => {
+  const dispatch = useDispatch();
+  const searchText = useRef();
+  const restaurantList = useSelector((store) => store.restaurantList?.list);
+
+  const handleSearchText = () => {
+    dispatch(searchRestaurantList(searchText.current.value));
+    const filteredList = restaurantList.filter((list) =>
+      list?.info?.name
+        .toLowerCase()
+        .includes(searchText.current.value.toLowerCase())
+    );
+    dispatch(addRestaurantList(filteredList));
+  };
+
+  const [buttonClick, setButtonClick] = useState(["Login"]);
 
   const { loggedInUser } = useContext(UserContext);
   const cartItems = useSelector((store) => store.cart.items);
-  console.log(cartItems);
-
   return (
     <div className="flex p-4 justify-between items-center">
       <div className="logo w-20">
@@ -20,20 +34,19 @@ const Header = () => {
       </div>
 
       <div className="search">
-        <input
-          type="text"
-          className=" focus:outline-none border-2 border-orange-500  w-[750px] h-[60px] p-6 text-xl rounded-[40px]"
-          value={searchInput}
-          onChange={(e) => {
-            setSearchInput(e.target.value);
-          }}
-        ></input>
-        <button
-          className="focus:outline-none border-0  h-[60px] p-3.5 px-5 ml-[-99.5px] text-xl rounded-[40px] text-center hover:bg-orange-500 hover:text-white"
-          onClick={() => {}}
-        >
-          Search
-        </button>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <input
+            ref={searchText}
+            type="text"
+            className=" focus:outline-none border-2 border-orange-500  w-[750px] h-[60px] p-6 text-xl rounded-[40px]"
+          ></input>
+          <button
+            className="focus:outline-none border-0  h-[60px] p-3.5 px-5 ml-[-99.5px] text-xl rounded-[40px] text-center hover:bg-orange-500 hover:text-white"
+            onClick={handleSearchText}
+          >
+            Search
+          </button>
+        </form>
       </div>
 
       <div className="nav-items">

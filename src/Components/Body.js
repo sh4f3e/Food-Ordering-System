@@ -4,9 +4,12 @@ import { useState, useEffect, useContext } from "react";
 import useOnlineStatus from "../Utils/useOnlineStatus";
 import { Link } from "react-router-dom";
 import UserContext from "../utils/UserContext";
+import { useDispatch, useSelector } from "react-redux";
+import { addRestaurantList } from "../utils/restaurantListSlice";
 const Body = () => {
-  // console.log(searchInput);
-  const [restaurantList, setRestaurantList] = useState([]);
+  const searchText = useSelector((store) => store.restaurantList?.searchText);
+  const restaurantlist = useSelector((store) => store.restaurantList?.list);
+  const dispatch = useDispatch();
 
   //useEffect First Argument: Call Back Function (Arrow Function)
   //Second Argument: Dependencies (Array)
@@ -21,8 +24,11 @@ const Body = () => {
 
     const json = await data.json();
 
-    setRestaurantList(
-      json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+    dispatch(
+      addRestaurantList(
+        json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
+          ?.restaurants
+      )
     );
   };
   const { setUserInfo, loggedInUser } = useContext(UserContext);
@@ -40,7 +46,7 @@ const Body = () => {
     );
   }
 
-  return restaurantList.length === 0 ? (
+  return !restaurantlist ? (
     <Shimmer />
   ) : (
     <div className="body">
@@ -66,10 +72,10 @@ const Body = () => {
         <button
           className="rated-btn py-2 px-5 bg-orange-500 border-2 rounded-full m-2 ml-8 mt-5 text-white text-[20px] hover:bg-white hover:text-black hover:border-orange-500"
           onClick={() => {
-            const filteredList = restaurantList.filter(
+            const filteredList = restaurantlist.filter(
               (res) => res.info.avgRating > "4.2"
             );
-            setRestaurantList(filteredList);
+            dispatch(addRestaurantList(filteredList));
           }}
         >
           Top Rated
@@ -88,8 +94,9 @@ const Body = () => {
       <div className="online-status flex flex-row-reverse text-[15px] italic text-[#7f7f7f] pr-[50px] mt-[-40px]">
         <p>Status: {onlinestatus ? "Online" : "Offline"}</p>
       </div>
+
       <div className="res-container flex flex-wrap pl-[90px]">
-        {restaurantList.map((restaurant) => (
+        {restaurantlist.map((restaurant) => (
           <Link
             key={restaurant.info.id}
             to={"/restaurants/" + restaurant.info.id}
@@ -97,12 +104,6 @@ const Body = () => {
             <RestuarantCard resData={restaurant} />{" "}
           </Link>
         ))}
-
-        {/* {
-          updateRestaurantList.map((res) =>
-            (<RestuarantCard key={res.info.id} resData={res}/>)
-          )
-        } */}
       </div>
     </div>
   );
